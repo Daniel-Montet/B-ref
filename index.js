@@ -1,4 +1,4 @@
-const https = require('https')
+const http = require('https')
 const options = {
   hostname: 'koajs.com',
   port: 443,
@@ -6,24 +6,25 @@ const options = {
   method: 'GET'
 }
 
+let str = "";
 
-let callback = (response) => {
-    let str = "";
-
+let responseListener = (response) => {
     response.on("data", (chunk) => {
         str += chunk;
     });
 
     response.on("end", ()=> {
-        return str;
+        //fire eent to notify me that the data stream has completed
+        console.log(str);
+        console.log('No more data in response.');
     });
 
     response.on("error",(error) => {
         console.error(error);
-    })
-
-    
+    });
 }
 
-https.request(options, callback).end();
-console.log(data);
+
+
+const request = http.request(options, responseListener);
+request.end();
