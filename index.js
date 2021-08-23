@@ -1,30 +1,32 @@
-const http = require('https')
+const http = require("https");
 const options = {
-  hostname: 'koajs.com',
+  hostname: "www.jumia.co.ke",
   port: 443,
-  path: '/',
-  method: 'GET'
-}
+  path: "/",
+  method: "GET",
+};
 
 let str = "";
 
 let responseListener = (response) => {
-    response.on("data", (chunk) => {
-        str += chunk;
-    });
+  response.on("data", (chunk) => {
+    str += chunk;
+  });
 
-    response.on("end", ()=> {
-        //fire eent to notify me that the data stream has completed
-        console.log(str);
-        console.log('No more data in response.');
-    });
+  response.on("end", () => {
+    getHrefs(str);
+    console.log("No more data in response.");
+  });
 
-    response.on("error",(error) => {
-        console.error(error);
-    });
-}
-
-
+  response.on("error", (error) => {
+    console.error(error);
+  });
+};
 
 const request = http.request(options, responseListener);
 request.end();
+
+function getHrefs(chunk) {
+  let hrefExpression = /\bhref/;
+  console.log(chunk.match(hrefExpression));
+}
