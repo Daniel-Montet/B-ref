@@ -1,30 +1,22 @@
-const http = require('https')
+const request = require("./request");
+
+const hrefRegexpattern = /href=\W(\/|http\w:\/\/)(\w+\W|\w+){1,}/gm;
+
 const options = {
-  hostname: 'koajs.com',
-  port: 443,
-  path: '/',
-  method: 'GET'
+    hostname: '',
+    port: 443,
+    path: "",
+    method: "GET"
 }
 
-let str = "";
-
-let responseListener = (response) => {
-    response.on("data", (chunk) => {
-        str += chunk;
-    });
-
-    response.on("end", ()=> {
-        //fire eent to notify me that the data stream has completed
-        console.log(str);
-        console.log('No more data in response.');
-    });
-
-    response.on("error",(error) => {
-        console.error(error);
-    });
+async function d() {
+    let d = await request.data()
+    console.log(d)
 }
 
+d()
 
-
-const request = http.request(options, responseListener);
-request.end();
+// make a request to an endpoint
+// get all matches from the endpoint;
+// send a request to each endpoint
+//      if response is a 400-599, the link is broken and should be returned
