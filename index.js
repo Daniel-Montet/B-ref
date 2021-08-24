@@ -1,32 +1,28 @@
-const http = require("https");
+import request from "./src/request.js";
+import url from "url";
+
+const hrefRegexpattern = /href=\W(\/|http\w:\/\/)(\w+\W|\w+){1,}/gm;
+
 const options = {
-  hostname: "www.jumia.co.ke",
+  hostname: "www.youtube.com",
   port: 443,
-  path: "/",
+  path: "",
   method: "GET",
 };
 
-let str = "";
-
-let responseListener = (response) => {
-  response.on("data", (chunk) => {
-    str += chunk;
-  });
-
-  response.on("end", () => {
-    getHrefs(str);
-    console.log("No more data in response.");
-  });
-
-  response.on("error", (error) => {
-    console.error(error);
-  });
-};
-
-const request = http.request(options, responseListener);
-request.end();
-
-function getHrefs(chunk) {
-  let hrefExpression = /\bhref/;
-  console.log(chunk.match(hrefExpression));
+async function d() {
+  let d = await request.data();
+  console.log(d);
 }
+
+d();
+
+// make a request to an endpoint
+// get all matches from the endpoint;
+// send a request to each endpoint
+//      if response is a 400-599, the link is broken and should be returned
+
+// parse urls into hostname and paths
+const myURL = new URL("/docs");
+
+console.log(myURL);
