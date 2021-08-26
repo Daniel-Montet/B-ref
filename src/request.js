@@ -5,9 +5,6 @@ const request = (function RequestAPI() {
   const error = null;
   let str = null;
 
-  async function data() {
-    return { data: str, error: error };
-  }
 
   function callback(response) {
     response.on("data", (chunk) => {
@@ -20,7 +17,7 @@ const request = (function RequestAPI() {
     });
   }
 
-  function init(options) {
+  function get(options) {
     const req = https.request(options, callback);
     req.on("error", (err) => {
       error += err;
@@ -31,8 +28,7 @@ const request = (function RequestAPI() {
   }
 
   return {
-    data: data,
-    init: init,
+    get: get,
   };
 })();
 
