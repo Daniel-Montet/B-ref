@@ -3,24 +3,20 @@ import https from "https";
 // write a test for this using Jest
 const request = (function RequestAPI() {
   const error = null;
-  let str = null;
-
-  async function data() {
-    return { data: str, error: error };
-  }
+  let data = null;
 
   function callback(response) {
     response.on("data", (chunk) => {
-      str += chunk;
+      data += chunk;
     });
 
     response.on("end", () => {
-      console.log(str);
+      console.log(data);
       console.log("End of response");
     });
   }
 
-  function init(options) {
+  function get(options) {
     const req = https.request(options, callback);
     req.on("error", (err) => {
       error += err;
@@ -30,9 +26,27 @@ const request = (function RequestAPI() {
     req.end();
   }
 
+  const get = (options) => {
+    return new Promise((resolve, reject) => {
+      const request = https.request(options, (response) => {
+        response.on("data", (chunk) => (data += chunk));
+
+        response.on("end", () => {
+          console.log("End of response");
+          resolve(data);
+        });
+      });
+
+      request.on("error", (error) => {
+        reject(error);
+      });
+
+      request.end();
+    });
+  };
+
   return {
-    data: data,
-    init: init,
+    get: get,
   };
 })();
 
