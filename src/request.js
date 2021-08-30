@@ -1,34 +1,13 @@
 import https from "https";
+import { to } from "./to.js";
 
 // write a test for this using Jest
 const request = (function RequestAPI() {
-  const error = null;
   let data = null;
 
-  function callback(response) {
-    response.on("data", (chunk) => {
-      data += chunk;
-    });
-
-    response.on("end", () => {
-      console.log(data);
-      console.log("End of response");
-    });
-  }
-
-  function get(options) {
-    const req = https.request(options, callback);
-    req.on("error", (err) => {
-      error += err;
-      console.log(error);
-    });
-
-    req.end();
-  }
-
-  const get = (options) => {
+  const get = () => {
     return new Promise((resolve, reject) => {
-      const request = https.request(options, (response) => {
+      const request = https.request(this, (response) => {
         response.on("data", (chunk) => (data += chunk));
 
         response.on("end", () => {
@@ -45,8 +24,37 @@ const request = (function RequestAPI() {
     });
   };
 
+  function urlParse() {
+    let myURL;
+
+    try {
+      myURL = new URL(this);
+      return {
+        error: null,
+        options: {
+          hostname: myURL.hostname,
+          port: 443,
+          path: myURL.pathname,
+          method: "GET",
+        },
+      };
+    } catch (error) {
+      return { error: error };
+    }
+  }
+
+  const init = async (url) => {
+    const { error, options } = urlParse.call(url);
+
+    if (error !== null) {
+      return { error };
+    }
+
+    return to(get.call(options));
+  };
+
   return {
-    get: get,
+    init: init,
   };
 })();
 

@@ -1,5 +1,4 @@
 import request from "./src/request.js";
-import url from "url";
 
 const hrefRegexpattern = /href=\W(\/|http\w:\/\/)(\w+\W|\w+){1,}/gm;
 
@@ -9,25 +8,24 @@ const hrefRegexpattern = /href=\W(\/|http\w:\/\/)(\w+\W|\w+){1,}/gm;
 //      if response is a 400-599, the link is broken and should be returned
 
 // parse urls into hostname and paths
-const myURL = new URL(
-  "https://nodejs.dev/learn/get-http-request-body-data-using-nodejs"
-);
 
 function match(pattern, string) {
   return string.match(pattern);
 }
 
-const options = {
-  hostname: myURL.hostname,
-  port: 443,
-  path: myURL.path,
-  method: "GET",
-};
-
 async function d() {
-  request.get(options);
-  let d = await request.data();
-  console.log(d);
+  let { error, data } = await request.init("https://blog.grossman.i");
+  console.log(error);
+  console.log("data ", data);
+  // if error log it
+  // if data find matches
 }
 
 d();
+
+// let myURL = new URL(
+//   "https://blog.grossman.io/how-to-write-async-await-without-try-catch-blocks-in-javascript/"
+// // );
+// console.log(myURL);
+// technique number 1:
+// ---> Promisify
