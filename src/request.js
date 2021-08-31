@@ -5,7 +5,7 @@ import { to } from "./to.js";
 const request = (function RequestAPI() {
   let data = null;
 
-  const get = () => {
+  function init() {
     return new Promise((resolve, reject) => {
       const request = https.request(this, (response) => {
         response.on("data", (chunk) => (data += chunk));
@@ -22,18 +22,19 @@ const request = (function RequestAPI() {
 
       request.end();
     });
-  };
+  }
 
   function urlParse() {
     let myURL;
 
     try {
       myURL = new URL(this);
+
       return {
         error: null,
         options: {
           hostname: myURL.hostname,
-          port: 443,
+          port: myURL.port,
           path: myURL.pathname,
           method: "GET",
         },
@@ -43,19 +44,19 @@ const request = (function RequestAPI() {
     }
   }
 
-  const init = async (url) => {
+  const get = async (url) => {
     const { error, options } = urlParse.call(url);
+    // console.log(error);
+    // console.log("data ", data);
 
     if (error !== null) {
       return { error };
     }
 
-    return to(get.call(options));
+    return to(init.call(options));
   };
 
-  return {
-    init: init,
-  };
+  return { get };
 })();
 
 export default request;

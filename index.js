@@ -1,6 +1,6 @@
 import request from "./src/request.js";
 
-// const hrefRegexpattern = /href=\W(\/|http\w:\/\/)(\w+\W|\w+){1,}/gm;
+const hrefRegexpattern = /href=\W(\/|http\w:\/\/)(\w+\W|\w+){1,}/gm;
 
 // make a request to an endpoint
 // get all matches from the endpoint;
@@ -9,14 +9,18 @@ import request from "./src/request.js";
 
 // parse urls into hostname and paths
 
-// function match(pattern, string) {
-//   return string.match(pattern);
-// }
+function match(pattern, string) {
+  return string.match(pattern);
+}
 
 async function d() {
-  let { error, data } = await request.init("https://blog.grossman.i");
-  console.log(error);
-  console.log("data ", data);
+  let { error, data } = await request.get("https://www.google.com");
+  if (error !== null) {
+    console.log(error);
+  }
+
+  let matches = match(hrefRegexpattern, data);
+  console.log(matches);
   // if error log it
   // if data find matches
 }
